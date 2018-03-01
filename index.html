@@ -9,11 +9,13 @@
 
     <script src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/node_modules/jsbarcode/dist/JsBarcode.all.min.js"></script>
+    <script src="/node_modules/dom-to-image/dist/dom-to-image.min.js"></script>
+    <script src="/node_modules/file-saver/FileSaver.min.js"></script>
     <!--<script src="/node_modules/moment/moment.js"></script>-->
     <!--<script src="/static/js/main.js"></script>-->
 </head>
 <body>
-<div class="siimple-navbar siimple-navbar--blue siimple-navbar--fluid">
+<div  id="header" class="siimple-navbar siimple-navbar--blue siimple-navbar--fluid">
   <div class="siimple-layout--left">
     <a href="/" class="siimple-navbar-title">Generate your own tickets</a>
   </div>
@@ -37,15 +39,14 @@
     <div class="siimple-grid-col siimple-grid-col--8">
       <div id="ticket" class="img-overlay-wrap">
         <img width="360" src="/static/img/blank.jpg">
-        <!-- 234x125 -- 300, height: 88 -->
-        <!-- 281x150 -- 360, height: 106 -->
         <svg id="barcode"></svg>
       </div>
+        <!-- 234x125 -- 300, height: 88 -->
+        <!-- 281x150 -- 360, height: 106 -->
       <img width="360" src="/static/img/test.jpg">
     </div>
   </div>
 </div>
-
 <script>
 
   function generateBarcode(value) {
@@ -64,11 +65,18 @@
       generateBarcode($("#target-value").val());
       $("#barcode").attr('style','transform: scale(1.48);');
     });
+
+    $("#download-button").click(function() {
+      var node = document.getElementById('ticket');
+
+      domtoimage.toBlob(node).then(function(blob) {
+        window.saveAs(blob, 'my-node.png');
+      }).catch(function (error) {
+        console.error('oops, something went wrong!', error);
+      });
+    });
+
   });
 </script>
-
-<!--<div class="siimple-footer siimple-footer&#45;&#45;teal siimple-footer&#45;&#45;fluid" align="center">-->
-    <!--just checking footer-->
-<!--</div>-->
 </body>
 </html>
