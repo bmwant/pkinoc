@@ -12,6 +12,13 @@
 
 .img-overlay-wrap svg {
     position: absolute;
-    top: 276px;
-    left: 48px;
+    /*top: 276px;*/
+    top: 343px;
+    /*left: 48px;*/
+    left: 78px;
 }
+
+/*
+300: 276, 48
+360: 331, 58
+*/

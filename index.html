@@ -36,8 +36,9 @@
   <div class="siimple-grid-row">
     <div class="siimple-grid-col siimple-grid-col--8">
       <div id="ticket" class="img-overlay-wrap">
-        <img width="300" src="/static/img/blank.jpg">
-        <!-- 234x125 -->
+        <img width="360" src="/static/img/blank.jpg">
+        <!-- 234x125 -- 300, height: 88 -->
+        <!-- 281x150 -- 360, height: 106 -->
         <svg id="barcode"></svg>
       </div>
       <img width="360" src="/static/img/test.jpg">
@@ -61,7 +62,7 @@
   $(function() {
     $("#generate-button").click(function() {
       generateBarcode($("#target-value").val());
-      $("#barcode").attr('style','transform: scale(1.25);');
+      $("#barcode").attr('style','transform: scale(1.48);');
     });
   });
 </script>
