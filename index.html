@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>pkinoc</title>
+  <meta charset="UTF-8">
+  <title>pkinoc</title>
 
-    <link rel="stylesheet" href="/node_modules/siimple/dist/siimple.min.css">
-    <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/node_modules/siimple/dist/siimple.min.css">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/railscasts.css">
 
-    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="/node_modules/jsbarcode/dist/JsBarcode.all.min.js"></script>
-    <script src="/node_modules/dom-to-image/dist/dom-to-image.min.js"></script>
-    <script src="/node_modules/file-saver/FileSaver.min.js"></script>
-    <script src="/node_modules/moment/moment.js"></script>
+  <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="/node_modules/jsbarcode/dist/JsBarcode.all.min.js"></script>
+  <script src="/node_modules/dom-to-image/dist/dom-to-image.min.js"></script>
+  <script src="/node_modules/file-saver/FileSaver.min.js"></script>
+  <script src="/node_modules/moment/moment.js"></script>
+  <script src="/node_modules/moment/locale/uk.js"></script>
+  <script src="/static/js/highlight.pack.js"></script>
 </head>
 <body>
 <div  id="header" class="siimple-navbar siimple-navbar--blue siimple-navbar--fluid">
@@ -28,13 +31,13 @@
     <div class="siimple-grid-col siimple-grid-col--12">
       <div id="data-form" class="siimple-form text-center">
         <fieldset>
-          <label class="siimple-label">URL to a movie:</label>
-          <input id="ticket-url" type="text" class="siimple-input" placeholder="">
+          <label id="ticket-url-label" class="siimple-label">URL to a movie:</label>
+          <input id="ticket-url" type="text" class="siimple-input" placeholder="https://pay.planetakino.ua/hall/imax-kiev/447386">
           <div id="ticket-button" class="siimple-btn siimple-btn--blue">Get a ticket</div>
         </fieldset>
         <fieldset>
           <label class="siimple-label">Code:</label>
-          <input id="target-value" value="2070120888749" type="text" class="siimple-input" placeholder="" maxlength="13">
+          <input id="target-value" type="text" class="siimple-input" placeholder="2070120888749" maxlength="13">
           <div id="generate-button" class="siimple-btn siimple-btn--green">Generate</div>
           <div id="download-button" class="siimple-btn siimple-btn--teal">Download picture</div>
         </fieldset>
@@ -46,11 +49,15 @@
       <div id="ticket" class="img-overlay-wrap">
         <img width="360" src="/static/img/blank.jpg">
         <svg id="barcode"></svg>
-        <div id="seat-num" class="num">2</div>
-        <div id="row-num" class="num">5</div>
-        <div id="technology">Cinetech+2D</div>
-        <div id="hall">Зал 5</div>
-        <div id="name">НІЧНІ ІГРИ</div>
+        <div id="seat-num" class="num"></div>
+        <div id="row-num" class="num"></div>
+        <div id="technology"></div>
+        <div id="hall"></div>
+        <div id="name"></div>
+        <div id="date-time"></div>
+        <div id="date-num"></div>
+        <div id="date-day"></div>
+        <div id="date-month"></div>
       </div>
         <!-- 234x125 -- 300, height: 88 -->
         <!-- 281x150 -- 360, height: 106 -->
@@ -58,6 +65,9 @@
         <img width="360" src="/static/img/test.jpg">
 
       </div>
+    </div>
+    <div class="siimple-grid-col siimple-grid-col--4">
+        <pre><code class="json hljs" id="codeblock"></code></pre>
     </div>
   </div>
 </div>
@@ -74,21 +84,27 @@
     });
   }
 
-  function setValues() {
+  function positionElements() {
     var nameElem = $('#name');
     var width = nameElem.width();
     var current = parseInt(nameElem.css('left')),
       newPosition = current - width/2;
     // console.log(width, current);
     nameElem.css({'left': newPosition + 'px'});
+    $('code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+  }
+
+  function createBarcode() {
+    generateBarcode($("#target-value").val());
+    $("#barcode").attr('style','transform: scale(1.48);');
   }
 
   $(function() {
 
-    $("#generate-button").click(function() {
-      generateBarcode($("#target-value").val());
-      $("#barcode").attr('style','transform: scale(1.48);');
-    });
+    moment.locale('uk');
+    $("#generate-button").click(createBarcode);
 
     $("#download-button").click(function() {
       var node = document.getElementById('ticket');
@@ -100,7 +116,30 @@
       });
     });
 
-    setValues();
+    $("#ticket-button").click(function() {
+      var url = $("#ticket-url").val();
+      $.post("/give-me-ticket", {url: url}, function(data) {
+        var logData = JSON.stringify(data, null, 2) + "\n",
+          codeBlock = $("#codeblock");
+        codeBlock.append(logData);
+        $("#target-value").val(data.barcode);
+        $("#hall").text(data.movie_hall);
+        $("#technology").text(data.movie_tech);
+        var date = data.movie_date;
+        var movieDate = moment(date, "YYYY-MM-DD HH:mm:ss");
+        $("#date-month").text(movieDate.format("MMMM"));
+        $("#date-day").text(movieDate.format("dddd"));
+        $("#date-num").text(movieDate.format("DD"));
+        $("#date-time").text(movieDate.format("HH:mm"));
+
+        // movie_date "2018-03-03 15:45:00"
+        $("#name").text(data.movie_name);
+        $("#row-num").text(data.row_num);
+        $("#seat-num").text(data.seat_num);
+        createBarcode();
+        positionElements();
+      });
+    });
   });
 </script>
 </body>

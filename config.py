@@ -8,3 +8,5 @@ RETRY_SLEEP = 10
 DEFAULT_HEADERS = {
     'authorization': 'Bearer 4f6507711933412ba688b6c7849dff99',
 }
+
+DEFAULT_TIMEOUT = 10
