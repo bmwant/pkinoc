@@ -1,24 +1,78 @@
+@import "http://fonts.fontstorage.com/import/roboto.css";
+
 .img-overlay-wrap {
-    position: relative;
-    display: inline-block; /* <= shrinks container to image size */
-    transition: transform 150ms ease-in-out;
+  position: relative;
+  display: inline-block; /* <= shrinks container to image size */
+  transition: transform 150ms ease-in-out;
 }
 
 .img-overlay-wrap img { /* <= optional, for responsiveness */
-    display: block;
-    max-width: 100%;
-    height: auto;
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 .img-overlay-wrap svg {
-    position: absolute;
-    /*top: 276px;*/
-    top: 343px;
-    /*left: 48px;*/
-    left: 78px;
+  position: absolute;
+  /*top: 276px;*/
+  top: 343px;
+  /*left: 48px;*/
+  left: 78px;
 }
 
+fieldset {
+  /*display: block;*/
+  border: none;
+}
 /*
 300: 276, 48
 360: 331, 58
 */
+
+.num {
+  font-family: Roboto, Helvetica, sans-serif;
+  color: #f5f5f5;
+  font-size: 30px;
+  font-weight: bold;
+}
+#seat-num {
+  position: absolute;
+  top: 563px;
+  left: 240px;
+}
+#row-num {
+  position: absolute;
+  top: 563px;
+  left: 105px;
+}
+#test-ticket {
+  position: relative;
+  display: inline-block;
+}
+#technology {
+  color: #77abdc;
+  position: absolute;
+  top: 240px;
+  left: 190px;
+  font-weight: bold;
+  font-size: 19px;
+  font-family: Helvetica, sans-serif;
+}
+#hall {
+  color: #77abdc;
+  font-family: Helvetica, sans-serif;
+  font-size: 19px;
+  font-weight: bold;
+  position: absolute;
+  top: 261px;
+  left: 222px;
+}
+#name {
+  color: #fefefe;
+  font-family: Helvetica, sans-serif;
+  position: absolute;
+  top: 196px;
+  left: 50%;
+  font-size: 30px;
+  font-weight: bold;
+}

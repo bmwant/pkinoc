@@ -11,7 +11,7 @@
     <script src="/node_modules/jsbarcode/dist/JsBarcode.all.min.js"></script>
     <script src="/node_modules/dom-to-image/dist/dom-to-image.min.js"></script>
     <script src="/node_modules/file-saver/FileSaver.min.js"></script>
-    <!--<script src="/node_modules/moment/moment.js"></script>-->
+    <script src="/node_modules/moment/moment.js"></script>
 </head>
 <body>
 <div  id="header" class="siimple-navbar siimple-navbar--blue siimple-navbar--fluid">
@@ -27,10 +27,17 @@
   <div class="siimple-grid-row">
     <div class="siimple-grid-col siimple-grid-col--12">
       <div id="data-form" class="siimple-form text-center">
-        <label class="siimple-label">Code:</label>
-        <input id="target-value" value="2070120888749" type="text" class="siimple-input" placeholder="" maxlength="13">
-        <div id="generate-button" class="siimple-btn siimple-btn--green">Generate</div>
-        <div id="download-button" class="siimple-btn siimple-btn--teal">Download picture</div>
+        <fieldset>
+          <label class="siimple-label">URL to a movie:</label>
+          <input id="ticket-url" type="text" class="siimple-input" placeholder="">
+          <div id="ticket-button" class="siimple-btn siimple-btn--blue">Get a ticket</div>
+        </fieldset>
+        <fieldset>
+          <label class="siimple-label">Code:</label>
+          <input id="target-value" value="2070120888749" type="text" class="siimple-input" placeholder="" maxlength="13">
+          <div id="generate-button" class="siimple-btn siimple-btn--green">Generate</div>
+          <div id="download-button" class="siimple-btn siimple-btn--teal">Download picture</div>
+        </fieldset>
       </div>
     </div>
   </div>
@@ -39,10 +46,18 @@
       <div id="ticket" class="img-overlay-wrap">
         <img width="360" src="/static/img/blank.jpg">
         <svg id="barcode"></svg>
+        <div id="seat-num" class="num">2</div>
+        <div id="row-num" class="num">5</div>
+        <div id="technology">Cinetech+2D</div>
+        <div id="hall">Зал 5</div>
+        <div id="name">НІЧНІ ІГРИ</div>
       </div>
         <!-- 234x125 -- 300, height: 88 -->
         <!-- 281x150 -- 360, height: 106 -->
-      <img width="360" src="/static/img/test.jpg">
+      <div id="test-ticket">
+        <img width="360" src="/static/img/test.jpg">
+
+      </div>
     </div>
   </div>
 </div>
@@ -59,7 +74,17 @@
     });
   }
 
+  function setValues() {
+    var nameElem = $('#name');
+    var width = nameElem.width();
+    var current = parseInt(nameElem.css('left')),
+      newPosition = current - width/2;
+    // console.log(width, current);
+    nameElem.css({'left': newPosition + 'px'});
+  }
+
   $(function() {
+
     $("#generate-button").click(function() {
       generateBarcode($("#target-value").val());
       $("#barcode").attr('style','transform: scale(1.48);');
@@ -75,6 +100,7 @@
       });
     });
 
+    setValues();
   });
 </script>
 </body>
