@@ -121,6 +121,22 @@
       });
     });
 
+    // f u locale
+    var months = [
+      'січня',
+      'лютого',
+      'березня',
+      'квітня',
+      'травня',
+      'червня',
+      'липня',
+      'серпня',
+      'вересня',
+      'жовтня',
+      'листопада',
+      'грудня'
+    ];
+
     $("#ticket-button").click(function() {
       var url = $("#ticket-url").val();
       $.post("/give-me-ticket", {url: url}, function(data) {
@@ -132,7 +148,8 @@
         $("#technology").text(data.movie_tech);
         var date = data.movie_date;
         var movieDate = moment(date, "YYYY-MM-DD HH:mm:ss");
-        $("#date-month").text(movieDate.format("MMMM"));
+        var monthIndex = parseInt(movieDate.format("M")) - 1;
+        $("#date-month").text(months[monthIndex]);
         $("#date-day").text(movieDate.format("dddd"));
         $("#date-num").text(movieDate.format("DD"));
         $("#date-time").text(movieDate.format("HH:mm"));
