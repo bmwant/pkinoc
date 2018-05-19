@@ -103,7 +103,7 @@ def launch():
     app.router.add_post('/give-me-ticket', get_transaction_data)
     setup_static_routes(app)
     uprint = partial(print, flush=True)
-    port = int(os.environ.get('PORT', 8080))
+    port = int(os.environ.get('PORT', config.DEFAULT_PORT))
 
     uprint('Running aiohttp {}'.format(aiohttp.__version__))
     web.run_app(app, print=uprint, port=port)
