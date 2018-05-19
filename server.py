@@ -28,17 +28,20 @@ async def index(request):
 
 
 async def get_free_seat_id(showtime_id):
-    url = 'https://pay.planetakino.ua/api/v1/cart/halls?showtimeId=470864'
-
+    url = 'https://pay.planetakino.ua/api/v1/cart/halls'
+    params = {
+        'showtimeId': showtime_id,
+    }
     async with aiohttp.ClientSession() as session:
         async with async_timeout.timeout(config.DEFAULT_TIMEOUT):
-            async with session.get(url) as response:
+            async with session.get(url, params=params) as response:
                 result = await response.json()
-                data = result.get('data', {})
-                if 'emptySeats' not in result:
+                data = result.get('data', {}).get('hallsSheme')
+                if not len(data) or 'emptySeats' not in data[0]:
                     log.error('Wrong response %s', result)
                     return config.DEFAULT_SEAT_ID
-                empty_seats = data['emptySeats']
+
+                empty_seats = data[0]['emptySeats']
                 if not empty_seats:
                     raise RuntimeError('No empty seats left!')
 
