@@ -88,13 +88,25 @@
     });
   }
 
-  function positionElements() {
-    var nameElem = $('#name');
-    var width = nameElem.width();
-    var current = parseInt(nameElem.css('left')),
-      newPosition = current - width/2;
+  function centerMe(elem, centerPoint) {
+    var width = elem.width();
+    var current = parseInt(elem.css('left')),
+      newPosition = centerPoint - width/2;
     // console.log(width, current);
-    nameElem.css({'left': newPosition + 'px'});
+    elem.css({'left': newPosition + 'px'});
+  }
+
+  function positionElements() {
+    var nameElem = $('#name'),
+      techElem = $('#technology'),
+      hallElem = $('#hall'),
+      ticketWidth = $('#ticket').width();
+    var centerPointForName = ticketWidth * 0.5,
+      centerPointForHall = ticketWidth * 0.7;
+    centerMe(nameElem, centerPointForName);
+    centerMe(techElem, centerPointForHall);
+    centerMe(hallElem, centerPointForHall);
+
     $('code').each(function(i, block) {
       hljs.highlightBlock(block);
     });
