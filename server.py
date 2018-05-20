@@ -37,11 +37,13 @@ async def get_free_seat_id(showtime_id):
             async with session.get(url, params=params) as response:
                 result = await response.json()
                 data = result.get('data', {}).get('hallsSheme')
-                if not len(data) or 'emptySeats' not in data[0]:
-                    log.error('Wrong response %s', result)
+
+                try:
+                    empty_seats = data[0]['emptySeats']
+                except (TypeError, IndexError, KeyError) as e:
+                    log.error('Wrong response %s: %s', e, result)
                     return config.DEFAULT_SEAT_ID
 
-                empty_seats = data[0]['emptySeats']
                 if not empty_seats:
                     raise RuntimeError('No empty seats left!')
 
