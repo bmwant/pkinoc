@@ -1,0 +1,21 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+aiohttp = "==3.0.5"
+async_timeout = "==2.0.0"
+attrs = "==17.4.0"
+chardet = "==3.0.4"
+idna = "==2.6"
+idna_ssl = "==1.0.0"
+multidict = "==4.1.0"
+yarl = "==1.1.1"
+
+
+[dev-packages]
+

@@ -51,9 +51,12 @@ async def get_free_seat_id(showtime_id):
                 return empty_seats[0]
 
 
-async def create_transaction(showtime_id):
+async def create_transaction(showtime_id, seat_id=None):
     url = 'https://pay.planetakino.ua/api/v1/cart/purchase'
-    seat_id = await get_free_seat_id(showtime_id)
+    if seat_id is None:
+        seat_id = await get_free_seat_id(showtime_id)
+
+    log.info('Creating transaction for a seat %s', seat_id)
     payload = {
         'seatIDs': seat_id,
         'seatIDGlasses': '',
@@ -82,8 +85,13 @@ async def get_transaction_data(request):
     url = 'https://pay.planetakino.ua/api/v1/cart/transaction-details'
     data = await request.post()
     showtime_id = get_showtime_id(data['url'])
+    desired_seat_code = data.get('seat-code') or None
     log.debug('Parsed showtime id %s', showtime_id)
-    transaction_id = await create_transaction(showtime_id)
+    if desired_seat_code:
+        log.debug('Trying to get seat %s', desired_seat_code)
+
+    transaction_id = await create_transaction(showtime_id,
+                                              seat_id=desired_seat_code)
     if transaction_id is None:
         return web.Response(text='Error during creation of transaction',
                             status=400)

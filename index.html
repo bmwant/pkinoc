@@ -35,6 +35,10 @@
           <a href="https://planetakino.ua/movies/" target="_blank">list of movies</a>
         </fieldset>
         <fieldset>
+          <label id="seat-code-label" class="siimple-label">Seat ID (optional)</label>
+          <input id="seat-code" type="text" class="siimple-input" placeholder="100002">
+        </fieldset>
+        <fieldset>
           <label id="ticket-url-label" class="siimple-label">URL to a movie:</label>
           <input id="ticket-url" type="text" class="siimple-input" placeholder="https://pay.planetakino.ua/hall/imax-kiev/447386">
           <div id="ticket-button" class="siimple-btn siimple-btn--blue">Get a ticket</div>
@@ -150,8 +154,9 @@
     ];
 
     $("#ticket-button").click(function() {
-      var url = $("#ticket-url").val();
-      $.post("/give-me-ticket", {url: url}, function(data) {
+      var url = $("#ticket-url").val(),
+        seatCode = $('#seat-code').val();
+      $.post("/give-me-ticket", {url: url, 'seat-code': seatCode}, function(data) {
         var logData = JSON.stringify(data, null, 2) + "\n",
           codeBlock = $("#codeblock");
         codeBlock.append(logData);
